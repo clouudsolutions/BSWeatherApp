@@ -5,4 +5,10 @@
     <string name="searchicon">searchIcon</string>
     <string name="enter_location">Enter Location</string>
     <string name="location_name">Location Name</string>
+    <string name="speed_13kmph">Speed 13kmph</string>
+    <string name="_20">20</string>
+    <string name="time">Time</string>
+    <string name="condition">Condition</string>
+    <string name="tempicon">tempIcon</string>
+    <string name="today_s_weather_forecast">Today\'s weather forecast</string>
 </resources>

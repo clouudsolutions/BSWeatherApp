@@ -25,11 +25,6 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.View
         this.context = context;
         this.weatherRVModelArrayList = weatherRVModelArrayList;
     }
-
-    public WeatherRVAdapter(ArrayList<WeatherRVModel> weatherRVModelArrayList) {
-        //
-    }
-
     @NonNull
     @Override
     public WeatherRVAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,7 +37,7 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.View
     public void onBindViewHolder(@NonNull WeatherRVAdapter.ViewHolder holder, int position) {
         WeatherRVModel model = weatherRVModelArrayList.get(position);
         holder.temperatureTV.setText(model.getTemperature().concat("°c"));
-        Picasso.get().load("http:".concat(model.getIcon())).into(holder.conditionTV);
+        Picasso.get().load("https:".concat(model.getIcon())).into(holder.conditionTV);
         holder.windTV.setText(model.getWindSpeed().concat("km/h"));
         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm ");
         SimpleDateFormat output = new SimpleDateFormat("hh:mm aa");

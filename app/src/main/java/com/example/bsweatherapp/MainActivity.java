@@ -4,6 +4,8 @@ import android.Manifest;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,16 +49,17 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout RLWeather;
     private ProgressBar loadingPB;
     private TextView topLocationName;
-    private TextView LocationName;
+//    private TextView LocationName;
     private TextView TemperatureTV;
     private TextView ConditionTV;
-    private TextInputEditText locationValue;
+    private TextInputEditText LocationName;
     private RecyclerView RVWeather;
     private ImageView backgroundImage,IconImage,searchImage;
     private ArrayList<WeatherRVModel> weatherRVModelArrayList;
     private WeatherRVAdapter weatherRVAdapter;
 
     private LocationManager locationManager;
+    private LocationListener locationListener;
     private int PERMISSION_CODE = 1;
 
     private String locationCityName;
@@ -68,27 +72,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RLWeather = findViewById(R.id.rlHome);
         loadingPB = findViewById(R.id.idPBLoading);
-        LocationName = findViewById(R.id.cityName);
-        topLocationName = findViewById(R.id.ToplocationName);
+        LocationName = findViewById(R.id.EditTILocation);
+        topLocationName = findViewById(R.id.idTVcityName);
         TemperatureTV = findViewById(R.id.temperature);
         ConditionTV = findViewById(R.id.weatherCondition);
-        locationValue = findViewById(R.id.enterCItyName);
         RVWeather = findViewById(R.id.RVWeather);
         backgroundImage = findViewById(R.id.backgroundImage);
         IconImage = findViewById(R.id.tempIcon);
         searchImage = findViewById(R.id.searchIcon);
         weatherRVModelArrayList = new ArrayList<>();
-        weatherRVAdapter = new WeatherRVAdapter(this.weatherRVModelArrayList);
+        weatherRVAdapter = new WeatherRVAdapter(this, this.weatherRVModelArrayList);
         RVWeather.setAdapter(weatherRVAdapter);
+        RVWeather.setLayoutManager(new GridLayoutManager(this));
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-        locationCityName = getLocationName(location.getLongitude(),location.getLatitude());
+        if(location!=null) {
+            locationCityName = getLocationName(location.getLongitude(),location.getLatitude());
+        }else {
+            locationCityName = getLocationName(44.3894, 79.6903);
+        }
 
         getWeatherInfo(locationCityName);
 
@@ -96,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
            public  void onClick(View v) {
-                String city = locationValue.getText().toString();
+                String city = LocationName.getText().toString();
 
                 if(city.isEmpty()) {
                     Toast.makeText(MainActivity.this,"Please Enter City Name",Toast.LENGTH_SHORT).show();
@@ -124,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String getLocationName(double longitude, double latitude) {
-        String LocationName = "Not Found";
+        String LocationName = locationCityName;
         Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
             try {
                 List<Address> addresses = gcd.getFromLocation(latitude,longitude,10);
@@ -152,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getWeatherInfo(String LocationName) {
         String url = "https://api.weatherapi.com/v1/forecast.json?key=c63d504b71bd425ca7785718231304&q="+LocationName+"&days=10&aqi=yes&alerts=yes";
-        locationValue.setText(LocationName);
+        topLocationName.setText(LocationName);
         RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
