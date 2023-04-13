@@ -83,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
         weatherRVModelArrayList = new ArrayList<>();
         weatherRVAdapter = new WeatherRVAdapter(this, this.weatherRVModelArrayList);
         RVWeather.setAdapter(weatherRVAdapter);
-        RVWeather.setLayoutManager(new GridLayoutManager(this));
-
+        RVWeather.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 
@@ -160,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         return LocationName;
     }
 
-
     private void getWeatherInfo(String LocationName) {
         String url = "https://api.weatherapi.com/v1/forecast.json?key=c63d504b71bd425ca7785718231304&q="+LocationName+"&days=10&aqi=yes&alerts=yes";
         topLocationName.setText(LocationName);
@@ -172,12 +170,14 @@ public class MainActivity extends AppCompatActivity {
                 RLWeather.setVisibility(View.VISIBLE);
                 weatherRVModelArrayList.clear();
                 try {
+                    String TLName = response.getJSONObject("location").getString("name");
+                    topLocationName.setText(TLName);
                     String temperature = response.getJSONObject("current").getString("temp_c");
                     TemperatureTV.setText(temperature.concat("°c"));
                     int isDay = response.getJSONObject("current").getInt("is_day");
                     String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
                     String conditionIcon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
-                    Picasso.get().load("http:".concat(conditionIcon)).into(IconImage);
+                    Picasso.get().load("https:".concat(conditionIcon)).into(IconImage);
                     ConditionTV.setText(condition);
 
                     JSONObject forecastObj = response.getJSONObject("forecast");

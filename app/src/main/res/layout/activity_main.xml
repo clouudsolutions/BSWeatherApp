@@ -143,21 +143,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:layout_above="@id/RVWeather"
+            android:layout_above="@id/RVWeatherCard"
             android:layout_marginBottom="10dp"
             android:textColor="@color/white"
             android:text="@string/today_s_weather_forecast"
             android:textStyle="bold" />
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/RVWeather"
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/RVWeatherCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:backgroundTintMode="multiply"
+            android:paddingTop="50dp"
+            app:cardBackgroundColor="#A652A2FF"
+            app:cardCornerRadius="10dp"
+            app:contentPadding="10dp">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RVWeather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="60dp"
+                android:orientation="horizontal">
 
-        
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.cardview.widget.CardView>
+
+
     </RelativeLayout>
 
 
