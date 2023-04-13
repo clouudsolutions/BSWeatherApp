@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BSWeatherApp</string>
+    <string name="background">background</string>
+    <string name="house">house</string>
+    <string name="searchicon">searchIcon</string>
+    <string name="enter_location">Enter Location</string>
+    <string name="location_name">Location Name</string>
+</resources>
